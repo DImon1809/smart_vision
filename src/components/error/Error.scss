@@ -1,0 +1,13 @@
+.error-wrapper {
+  background: var(--gradient);
+  // height: calc(var(--const-size) * 31.4);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    font-size: 28px;
+    color: #e30000;
+  }
+}

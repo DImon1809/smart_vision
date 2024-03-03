@@ -1,0 +1,31 @@
+.floor-window {
+  font-family: "Montserrat", sans-serif;
+  width: 600px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 1);
+  color: #e30000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  position: fixed;
+  top: 160px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  z-index: 1;
+  cursor: default;
+
+  .floor-window-close {
+    width: 40px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      opacity: 0.7;
+    }
+  }
+}
