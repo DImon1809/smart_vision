@@ -12,8 +12,16 @@
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 700px) and (orientation: landscape) {
-    height: 140vh;
+  @media (max-height: 450px) {
+    height: 120vh;
+  }
+
+  @media (max-height: 300px) {
+    height: 200vh;
+  }
+
+  @media (max-height: 200px) {
+    height: 260vh;
   }
 
   .animation-form {

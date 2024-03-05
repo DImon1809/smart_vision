@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { setCurrentParams } from "../../features/paramsSlice";
 
 import ParamsItem from "../params-item/ParamsItem";
 import Button from "../UI/Button";
@@ -16,48 +14,40 @@ import pencil from "../../font/pencil.png";
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const { idTestParams, currentParams } = useSelector(
-    (state) => state.paramsData
-  );
-  const dispatch = useDispatch();
+
   const [openFloorWind, setOpenFloorWind] = useState(false);
+  const [fullScreen, setFullScreen] = useState(true);
   const [floorText, setFloorText] = useState("Внимание");
-  const [testData, setTestData] = useState(false);
+  // const [params, setParams] = useState([
+  //   { id: 101, name: "Тестовый парметр", collectorUrl: "Тест" },
+  //   { id: 102, name: "Тестовый парметр", collectorUrl: "Тест" },
+  //   { id: 103, name: "Тестовый парметр", collectorUrl: "Тест" },
+  // ]);
+  const [validParams, setValidParams] = useState([]);
 
-  const redirectToAnalysis = (id) => navigate(`/${id}`);
+  const sleep = async (time) =>
+    new Promise((resolve) => setTimeout(() => resolve(true), time));
 
-  const getFromAndToDate = () => {
-    const today = new Date().getTime();
-
-    const from = new Date(today - 86400000).toISOString();
-    const to = new Date(today + 86400000).toISOString();
-
-    return { from, to };
+  const redirectToAnalysis = (id) => {
+    navigate(`/${id}`);
   };
 
   const requestData = useCallback(async () => {
     try {
-      const { from, to } = getFromAndToDate();
-      console.log(idTestParams);
-      console.log(from + " " + to);
-
       const response = await axios({
         method: "get",
-        url: `http://212.22.94.121:8080/api/params/${idTestParams}/values`,
+        url: `http://212.22.94.121:8080/api/params`,
         data: {},
         headers: {
           "Content-Type": "application/json",
-          paramId: idTestParams,
-          from,
-          to,
         },
       });
 
-      console.log(response);
+      setValidParams(response.data);
 
-      setTestData(true);
+      return response.data;
     } catch (err) {
-      setFloorText("Ошибка!");
+      setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
 
       console.error(err);
@@ -68,41 +58,87 @@ const MainPage = () => {
     requestData();
   }, [requestData]);
 
+  useEffect(() => {
+    if (validParams.length) return setFullScreen(false);
+
+    return setFullScreen(true);
+  }, [validParams]);
+
   const createTestParam = async () => {
     try {
-      // if (idTestParams in currentParams) {
-      //   setFloorText("Тестовый параметр уже есть!");
-      //   return setOpenFloorWind(true);
-      // }
+      const _checkReq = await requestData();
 
-      if (testData) {
+      if (_checkReq.length) {
+        setFloorText("Параметр уже создан!");
+
         return setOpenFloorWind(true);
       }
 
-      let now = new Date().toISOString();
-
       const response = await axios({
         method: "post",
-        url: `http://212.22.94.121:8080/api/params/${idTestParams}/values`,
+        url: `http://212.22.94.121:8080/api/params`,
         data: {
-          instant: now,
-          value: 10,
+          id: 1,
+          name: "Ошибки 404",
+          threshold: 20,
+          depth: 60,
+          pattern: "404",
+          collectorUrl: "localhost",
         },
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      console.log(response);
-
-      dispatch(setCurrentParams([idTestParams, now]));
       setFloorText("Параметр создан!");
+
+      setOpenFloorWind(true);
+
+      await axios({
+        method: "post",
+        url: `http://212.22.94.121:8080/api/params/${response.data.id}/values`,
+        data: {
+          instant: new Date().toISOString(),
+          value: Math.max(response.data.depth, response.data.threshold),
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      await sleep(2000);
+
+      setFloorText("Превышен допустимый порог ошибок!");
 
       setOpenFloorWind(true);
 
       return await requestData();
     } catch (err) {
-      setFloorText("Ошибка!");
+      setFloorText("Что-то пошло не так!");
+      setOpenFloorWind(true);
+
+      console.error(err);
+    }
+  };
+
+  const deleteParams = async (id) => {
+    try {
+      setValidParams(validParams.filter((_l) => _l.id !== id));
+
+      await axios({
+        method: "delete",
+        url: `http://212.22.94.121:8080/api/params/${id}`,
+        data: {},
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      setFloorText("Параметр успешно удалён!");
+
+      setOpenFloorWind(true);
+    } catch (err) {
+      setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
 
       console.error(err);
@@ -110,7 +146,9 @@ const MainPage = () => {
   };
 
   return (
-    <section className="main-section">
+    <section
+      className={fullScreen ? "main-section full-screen" : "main-section"}
+    >
       <div className="create-params">
         <div className="create-params-text">
           <h3>Создать параметр</h3>
@@ -138,7 +176,7 @@ const MainPage = () => {
       )}
 
       <div className="create-test-params">
-        <div className="param-item-button test-param" onClick={createTestParam}>
+        <div className="param-test-button" onClick={createTestParam}>
           <p>Создать тестовый параметр</p>
           <div className="arrow">
             <img src={arrowBase} alt="#" className="arrow-base" />
@@ -150,18 +188,25 @@ const MainPage = () => {
       <div className="params-lists">
         <h3>Список параметров</h3>
 
-        <ParamsItem>
-          <div
-            className="param-item-button"
-            onClick={() => redirectToAnalysis(1)}
-          >
-            <p>Анализировать</p>
-            <div className="arrow">
-              <img src={arrowBase} alt="#" className="arrow-base" />
-              <img src={arrowHead} alt="#" className="arrow-head" />
-            </div>
+        {validParams.length ? (
+          validParams.map((_l, index) => (
+            <ParamsItem
+              deleteParams={deleteParams}
+              name={_l.name}
+              collectorUrl={_l.collectorUrl}
+              threshold={_l.threshold}
+              depth={_l.depth}
+              id={_l.id}
+              key={index}
+              count={index + 1}
+              redirectToAnalysis={redirectToAnalysis}
+            ></ParamsItem>
+          ))
+        ) : (
+          <div className="param-alert">
+            <h3>Пока ничего нет</h3>
           </div>
-        </ParamsItem>
+        )}
       </div>
     </section>
   );

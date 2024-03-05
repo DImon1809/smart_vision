@@ -13,7 +13,9 @@ const FloorWindow = ({ setOpenFloorWind, floorText }) => {
         className="floor-window-close"
         onClick={clickCloseHandler}
       />
-      <p>{floorText}</p>
+      <div className="floor-window-alert">
+        <p>{floorText}</p>
+      </div>
     </div>
   );
 };

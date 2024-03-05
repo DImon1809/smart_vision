@@ -59,7 +59,7 @@ const FormPage = () => {
                 placeholder=" "
                 autoComplete="off"
               />
-              <label htmlFor="email">Введите е-маил</label>
+              <label htmlFor="email">Введите е-mail</label>
             </div>
             <div className="input-data">
               <img src={key} alt="#" className="key" />

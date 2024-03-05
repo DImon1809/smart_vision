@@ -5,6 +5,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-height: 420px) {
+    height: 120vh;
+  }
+
+  @media (max-height: 300px) {
+    height: 200vh;
+  }
+
+  @media (max-height: 200px) {
+    height: 260vh;
+  }
 }
 
 .preview-title {

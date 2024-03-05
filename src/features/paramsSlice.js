@@ -11,8 +11,9 @@ export const paramsSlice = createSlice({
   reducers: {
     setCurrentParams: (state, action) => {
       // state.currentParams.push(action.payload);
+      console.log(action.payload);
 
-      state.currentParams[action.payload[0]] = action.payload.at(-1);
+      state.currentParams = action.payload;
     },
 
     deleteParam: (state, action) => {

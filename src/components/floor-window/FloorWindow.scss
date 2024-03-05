@@ -16,6 +16,15 @@
   z-index: 1;
   cursor: default;
 
+  &-alert {
+    width: 80%;
+    text-align: center;
+
+    p {
+      width: 100%;
+    }
+  }
+
   .floor-window-close {
     width: 40px;
     position: absolute;
@@ -23,9 +32,41 @@
     right: 20px;
     transition: all 0.3s ease;
 
+    @media (max-width: 900px) {
+      width: 38px;
+      top: 6px;
+      right: 6px;
+    }
+
+    @media (max-width: 660px) {
+      width: 36px;
+      top: 16px;
+      right: 16px;
+    }
+
     &:hover {
       transform: translateY(-4px);
       opacity: 0.7;
     }
+  }
+
+  @media (max-width: 900px) {
+    width: 500px;
+    height: 125px;
+  }
+
+  @media (max-width: 660px) {
+    width: 400px;
+    height: 260px;
+  }
+
+  @media (max-width: 500px) {
+    width: 330px;
+    height: 300px;
+  }
+
+  @media (max-width: 400px) {
+    width: 300px;
+    height: 270px;
   }
 }
