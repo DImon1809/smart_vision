@@ -11,6 +11,13 @@
   box-shadow: 0px 1px 1px black;
   border-radius: 20px;
   position: relative;
+  opacity: 1;
+  transition: transform 1s ease, opacity 1s ease;
+
+  &.pre-delete {
+    transform: translateX(-100%);
+    opacity: 0.4;
+  }
 
   @media (max-width: 900px) {
     width: 700px;
@@ -21,7 +28,7 @@
     width: 440px;
     height: 300px;
     flex-direction: column;
-    gap: 60px;
+    gap: 40px;
   }
 
   @media (max-width: 480px) {
@@ -33,17 +40,27 @@
     height: 280px;
   }
 
-  .close {
-    width: 40px;
+  .icons-wrapper {
+    display: flex;
     position: absolute;
     top: 20px;
     right: 20px;
+  }
+
+  .close,
+  .update {
+    width: 40px;
+    cursor: pointer;
     transition: all 0.3s ease;
 
     @media (max-width: 730px) {
       width: 38px;
       top: 19px;
       right: 19px;
+    }
+
+    @media (max-width: 600px) {
+      cursor: default;
     }
 
     @media (max-width: 480px) {
@@ -63,7 +80,7 @@
     align-items: center;
 
     @media (max-width: 730px) {
-      margin-top: 20px;
+      margin-top: 40px;
     }
 
     @media (max-width: 480px) {
@@ -97,6 +114,10 @@
     color: #fff;
     font-family: "Roboto", sans-serif;
 
+    &.warn {
+      background-color: var(--warn-color);
+    }
+
     &.err {
       background-color: var(--err-color);
     }
@@ -121,12 +142,20 @@
   margin: 0 60px;
   cursor: pointer;
 
+  &.warn {
+    background-color: var(--warn-color);
+  }
+
   &.err {
     background-color: var(--err-color);
   }
 
   @media (max-width: 660px) {
     margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    cursor: default;
   }
 
   @media (max-width: 480px) {

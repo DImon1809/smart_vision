@@ -10,8 +10,7 @@ export const paramsSlice = createSlice({
   initialState,
   reducers: {
     setCurrentParams: (state, action) => {
-      // state.currentParams.push(action.payload);
-      console.log(action.payload);
+      // state.currentParams.push(action.payload)
 
       state.currentParams = action.payload;
     },

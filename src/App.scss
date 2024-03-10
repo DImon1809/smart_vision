@@ -5,6 +5,15 @@
   --ui-color: #5f9ea0;
   --height-button: 60px;
   --gradient: linear-gradient(#ffbbf1 0%, #a1ffe2 100%);
+  --factor: 4;
+
+  @media (max-height: 460px) {
+    --factor: 5;
+  }
+
+  @media (max-width: 1000px) {
+    --factor: 5;
+  }
 }
 
 body,

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
+import Wrapper from "../UI/page-wrapper/Wrapper";
+
 import "./Navbar.scss";
 
 const Navbar = () => {
@@ -27,7 +29,7 @@ const Navbar = () => {
       >
         <ul className="nav-items">
           <li className="nav-item">
-            <Link>Дополнительно</Link>
+            <Link to="/about">О приложении</Link>
           </li>
           <li className="nav-item">
             <Link to="/">Параметры</Link>
@@ -43,10 +45,10 @@ const Navbar = () => {
       >
         <span></span>
       </div>
-      <div
-        className={active ? "wrapper active" : "wrapper"}
-        onClick={clickBurgerHandler}
-      ></div>
+      <Wrapper
+        wapperActive={active}
+        onWrapperClickHandler={clickBurgerHandler}
+      />
     </nav>
   );
 };

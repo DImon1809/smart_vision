@@ -236,9 +236,11 @@
 @keyframes run-on-bottom {
   from {
     transform: translateY(-200px);
+    opacity: 0.4;
   }
 
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }

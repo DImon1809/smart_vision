@@ -1,0 +1,119 @@
+.loading-graph-doughnut {
+  width: 60%;
+  height: 200px;
+  padding: 20px 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 1px 0px black;
+  border-radius: 20px;
+
+  .loading-doughnut {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: rgba(239, 239, 239, 0.5);
+    margin: 0 auto;
+    position: relative;
+
+    &::before {
+      content: "";
+      width: 10%;
+      height: 10%;
+      border-radius: 50%;
+      position: absolute;
+      top: 46%;
+      right: 46%;
+      background-color: rgba(239, 239, 239, 1);
+      filter: drop-shadow(0px 0px 2px rgba(239, 239, 239, 1));
+      animation: doughnut-grouwth 3s linear infinite;
+
+      @media (max-width: 660px) {
+        right: 45%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      width: 180px;
+      height: 180px;
+    }
+
+    @media (max-width: 660px) {
+      width: 120px;
+      height: 220px;
+    }
+  }
+
+  .loading-doughnut-infomation {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    width: 80%;
+    height: 80%;
+    margin: 0 20px;
+
+    .loading-red,
+    .loading-yellow {
+      width: 100%;
+      height: 20%;
+      background-color: rgba(239, 239, 239, 0.8);
+      position: relative;
+    }
+
+    .loading-red::before,
+    .loading-yellow::before {
+      content: "";
+      width: 4%;
+      height: 100%;
+      position: absolute;
+      background-color: rgba(239, 239, 239, 1);
+      filter: drop-shadow(0px 0px 2px rgba(239, 239, 239, 1));
+      animation: move-solid 3s linear infinite;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    width: 80%;
+  }
+
+  @media (max-width: 900px) {
+    width: 90%;
+  }
+
+  @media (max-width: 700px) {
+    width: 94%;
+  }
+
+  @media (max-width: 660px) {
+    width: 90%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+@keyframes move-solid {
+  0% {
+    width: 4%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes doughnut-grouwth {
+  0% {
+    scale: 1;
+  }
+
+  100% {
+    scale: 10;
+  }
+}

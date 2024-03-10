@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useHTTP } from "../../hooks/useHTTP";
 import { useAuth } from "../../hooks/useAuth";
 
 import "./FormPage.scss";
@@ -12,7 +11,6 @@ import eyeClose from "../../font/eye-close.png";
 
 const FormPage = () => {
   const [yesEye, setyesEye] = useState(false);
-  const { request } = useHTTP();
   const { logIn } = useAuth();
   const passRef = useRef();
   const navigate = useNavigate();
@@ -31,12 +29,8 @@ const FormPage = () => {
     try {
       event.preventDefault();
 
-      const data = await request();
-
-      if (data) {
-        logIn(data);
-        navigate("/");
-      }
+      logIn(true);
+      navigate("/");
     } catch (err) {
       console.error(err);
     }

@@ -9,11 +9,11 @@
   align-items: center;
   border-radius: 20px;
   position: fixed;
+  z-index: 2;
   top: 160px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
-  z-index: 1;
   cursor: default;
 
   &-alert {

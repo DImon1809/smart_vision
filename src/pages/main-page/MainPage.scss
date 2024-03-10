@@ -14,6 +14,7 @@
   --err-color: #e30000;
   padding: 10% 0;
   height: 100%;
+  overflow: hidden;
 
   @media (max-width: 520px) {
     padding: 16% 0;
@@ -40,20 +41,61 @@
   }
 }
 
+.fuctional-card {
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 0.2px 0px 0.2px black;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 80px;
+  transform: translateX(50%);
+  opacity: 0.4;
+  transition: transform 1s ease, opacity 1s ease;
+
+  &.load {
+    transform: translateY(-0);
+    opacity: 1;
+  }
+
+  @media (max-width: 1000px) {
+    margin-top: 40px;
+  }
+
+  @media (max-width: 930px) {
+    width: 450px;
+  }
+
+  @media (max-width: 600px) {
+    width: 380px;
+  }
+
+  @media (max-width: 500px) {
+    width: 340px;
+    padding: 30px;
+  }
+
+  @media (max-width: 440px) {
+    width: 320px;
+    padding: 30px 10px;
+    border-radius: 60px;
+  }
+
+  @media (max-width: 400px) {
+    width: 300px;
+    padding: 40px 10px;
+  }
+}
+
 .create-params {
   width: 100%;
   margin-bottom: calc(var(--const-size) * 2);
 
-  @media (max-width: 860px) {
-    margin: calc(var(--const-size) * 2) auto;
-  }
-
-  @media (max-width: 540px) {
-    margin: calc(var(--const-size) * 3) auto;
-  }
-
-  @media (max-width: 420px) {
-    margin: calc(var(--const-size) * 4) auto;
+  @media (max-width: 440px) {
+    width: 86%;
   }
 
   .create-params-text {
@@ -61,21 +103,31 @@
 
     h3 {
       @include params-text(20px, 400, black);
+
+      @media (max-width: 400px) {
+        @include params-text(18px, 400, black);
+        margin-bottom: 26px;
+      }
     }
   }
 
   .params-inputs-wrapper {
-    display: flex;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     align-items: center;
-    justify-content: center;
-    gap: calc(var(--const-size) * 6);
+    width: 96%;
+    margin: 0 auto;
+    gap: 20px;
 
-    @media (max-width: 1120px) {
-      gap: calc(var(--const-size) * 3);
+    @media (max-width: 930px) {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
     }
 
-    @media (max-width: 1050px) {
-      flex-direction: column;
+    @media (max-width: 440px) {
+      gap: 20px;
     }
 
     .params-input {
@@ -90,9 +142,29 @@
         width: 300px;
         border: 1px solid black;
 
-        @media (max-width: 480px) {
+        @media (max-width: 500px) {
           height: 26px;
           width: 240px;
+          font-size: 13px;
+        }
+
+        @media (max-width: 440px) {
+          padding: 0 30px;
+          height: 24px;
+          width: 220px;
+          font-size: 12px;
+        }
+
+        @media (max-width: 400px) {
+          padding: 0 26px;
+          height: 22px;
+          width: 210px;
+        }
+      }
+
+      &.alert {
+        input {
+          border: 1px solid var(--err-color);
         }
       }
 
@@ -105,12 +177,19 @@
         @media (max-width: 660px) {
           width: 17px;
         }
+
+        @media (max-width: 440px) {
+          bottom: 5px;
+          width: 15px;
+        }
       }
     }
   }
 }
 
 .params-lists {
+  margin-top: 40px;
+
   h3 {
     text-align: center;
     @include params-text(20px, 400, black);
@@ -153,87 +232,6 @@
       @media (max-width: 500px) {
         @include params-text(18px, 400, black);
         margin: 0;
-      }
-    }
-  }
-}
-
-.create-test-params {
-  width: 300px;
-  margin: 0 auto 80px;
-
-  .param-test-button {
-    width: 100%;
-    background-color: var(--ui-color);
-    height: 60px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    cursor: pointer;
-
-    @media (max-width: 660px) {
-      margin: 0;
-    }
-
-    @media (max-width: 420px) {
-      width: 95%;
-      height: 50px;
-    }
-
-    .arrow {
-      display: flex;
-      align-items: center;
-
-      &-base {
-        width: 21px;
-        height: 4px;
-
-        @media (max-width: 420px) {
-          width: 19px;
-          height: 3px;
-        }
-      }
-
-      &-head {
-        width: 13px;
-        height: 18px;
-        transition: all 0.4s ease-in-out;
-
-        @media (max-width: 420px) {
-          width: 12px;
-          height: 15px;
-        }
-      }
-    }
-
-    &:hover p,
-    &:active p {
-      opacity: 0.7;
-    }
-
-    &:hover,
-    &:active {
-      filter: drop-shadow(0px 0px 10px var(--ui-color));
-    }
-
-    &:hover .arrow-head,
-    &:focus .arrow-head,
-    &:active .arrow-head {
-      transform: translateX(6px);
-
-      @media (max-width: 420px) {
-        transform: translateX(4px);
-      }
-    }
-
-    p {
-      color: #fff;
-      font-family: "Roboto", sans-serif;
-
-      @media (max-width: 420px) {
-        font-size: 14px;
       }
     }
   }

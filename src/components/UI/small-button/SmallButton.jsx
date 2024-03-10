@@ -1,9 +1,9 @@
-import "./Button.scss";
+import "./SmallButton.scss";
 
-import arrowBase from "../../font/arrow-base.png";
-import arrowHead from "../../font/arrow-head.png";
+import arrowBase from "../../../font/arrow-base.png";
+import arrowHead from "../../../font/arrow-head.png";
 
-const Button = ({ children }) => {
+const SmallButton = ({ children }) => {
   return (
     <div className="button">
       <p>{children}</p>
@@ -15,4 +15,4 @@ const Button = ({ children }) => {
   );
 };
 
-export default Button;
+export default SmallButton;

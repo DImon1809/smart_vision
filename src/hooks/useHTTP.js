@@ -1,13 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import axios from "axios";
 
 export const useHTTP = () => {
-  const request = async () => {
-    try {
-      return true;
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [ready, setReady] = useState(true);
+  const [errors, setErrors] = useState(false);
 
-  return { request };
+  const request = useCallback(
+    async (
+      method = "get",
+      url,
+      data = {},
+      headers = {
+        "Content-Type": "application/json",
+      }
+    ) => {
+      try {
+        setReady(false);
+
+        const response = await axios({
+          method,
+          url,
+          data,
+          headers,
+        });
+
+        setReady(true);
+        setErrors(false);
+
+        return response;
+      } catch (err) {
+        setReady(true);
+        setErrors(true);
+
+        console.error(err);
+      }
+    },
+    []
+  );
+
+  const clearErrors = () => setErrors(false);
+
+  return { request, ready, errors, clearErrors };
 };

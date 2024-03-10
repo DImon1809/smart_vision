@@ -1,0 +1,229 @@
+.about-section {
+  background: var(--gradient);
+  padding: 10% 0;
+  height: 100%;
+  overflow: hidden;
+
+  .about-wrapper {
+    width: 40%;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: "Montserrat", sans-serif;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0px 0.2px 0px 0.2px black;
+    color: rgb(66, 55, 55);
+    border-radius: 50px;
+    transform: translateX(50%);
+    opacity: 0.4;
+    transition: all 1s ease;
+
+    @media (max-width: 1250px) {
+      width: 50%;
+    }
+
+    @media (max-width: 1000px) {
+      width: 60%;
+      margin: 40px auto;
+    }
+
+    @media (max-width: 800px) {
+      width: 70%;
+    }
+
+    @media (max-width: 660px) {
+      width: 80%;
+    }
+
+    @media (max-width: 540px) {
+      padding: 20px;
+    }
+
+    &.load {
+      transform: translateY(-0);
+      opacity: 1;
+    }
+
+    .about-title {
+      text-align: center;
+
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+
+        @media (max-width: 800px) {
+          font-size: 22px;
+        }
+
+        @media (max-width: 540px) {
+          font-size: 20px;
+        }
+
+        @media (max-width: 440px) {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .about-paragrh {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 30px;
+
+      @media (max-width: 800px) {
+        font-size: 14px;
+      }
+
+      @media (max-width: 540px) {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .about-visual {
+    // width: 100%;
+    // height: 100%;
+    // margin: 0 auto;
+    // padding: 30px;
+    border-radius: 50%;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    transform-origin: 50% 50%;
+    animation: rotate-items 20s linear infinite;
+
+    &-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+
+      @media (max-width: 400px) {
+        margin: 30px 0;
+      }
+    }
+
+    @media (max-width: 460px) {
+    }
+
+    .first-elem,
+    .second-elem,
+    .third-elem {
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .second-elem {
+      display: flex;
+      gap: 120px;
+    }
+
+    .visual-arrow-first,
+    .visual-arrow-second,
+    .visual-arrow-third,
+    .visual-arrow-fourth {
+      display: block;
+      width: 50px;
+      height: 4px;
+      background-color: rgb(66, 55, 55);
+      position: absolute;
+    }
+
+    .visual-arrow-first {
+      left: -26px;
+      bottom: 0;
+      transform: rotate(-45deg);
+
+      @media (max-width: 800px) {
+        left: -30px;
+      }
+
+      @media (max-width: 540px) {
+        left: -34px;
+      }
+    }
+
+    .visual-arrow-second {
+      left: 96px;
+      bottom: 0px;
+      transform: rotate(45deg);
+
+      @media (max-width: 800px) {
+        left: 88px;
+      }
+
+      @media (max-width: 540px) {
+        left: 74px;
+      }
+    }
+
+    .visual-arrow-third {
+      right: 98px;
+      bottom: 0;
+      transform: rotate(-45deg);
+
+      @media (max-width: 800px) {
+        right: 88px;
+      }
+
+      @media (max-width: 540px) {
+        right: 74px;
+      }
+    }
+
+    .visual-arrow-fourth {
+      right: -26px;
+      bottom: 0;
+      transform: rotate(45deg);
+
+      @media (max-width: 540px) {
+        right: -35px;
+      }
+    }
+
+    .visual-title-item {
+      width: 120px;
+      height: 120px;
+      background: var(--ui-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 50%;
+      color: #fff;
+      font-family: "Roboto", sans-serif;
+      font-size: 16px;
+      filter: drop-shadow(0px 0px 10px var(--ui-color));
+      animation: rotate-item-revers 20s linear infinite;
+
+      @media (max-width: 800px) {
+        width: 110px;
+        height: 110px;
+        font-size: 14px;
+      }
+
+      @media (max-width: 540px) {
+        width: 90px;
+        height: 90px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@keyframes rotate-items {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-item-revers {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
+}
