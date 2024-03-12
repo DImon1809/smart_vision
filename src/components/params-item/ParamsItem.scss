@@ -69,9 +69,18 @@
       right: 16px;
     }
 
-    &:hover {
-      transform: translateY(-4px);
-      opacity: 0.7;
+    @media (hover: hover) {
+      &:hover {
+        transform: translateY(-4px);
+        opacity: 0.7;
+      }
+    }
+
+    @media (hover: none) {
+      &:active {
+        transform: translateY(-4px);
+        opacity: 0.7;
+      }
     }
   }
 
@@ -189,17 +198,32 @@
     }
   }
 
-  &:hover p,
+  @media (hover: hover) {
+    &:hover p {
+      opacity: 0.7;
+    }
+  }
+
   &:active p {
     opacity: 0.7;
   }
 
-  &:hover,
+  @media (hover: hover) {
+    &:hover p {
+      opacity: 0.7;
+    }
+  }
+
   &:active {
     filter: drop-shadow(0px 0px 10px var(--ui-color));
   }
 
-  &:hover .arrow-head,
+  @media (hover: hover) {
+    &:hover .arrow-head {
+      transform: translateX(6px);
+    }
+  }
+
   &:focus .arrow-head,
   &:active .arrow-head {
     transform: translateX(6px);

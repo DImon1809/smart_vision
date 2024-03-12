@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { HashLink } from "react-router-hash-link";
 import { useHTTP } from "../../hooks/useHTTP";
 
 import "./ParamsItem.scss";
@@ -73,14 +74,14 @@ const ParamsItem = ({
   return (
     <div className={preDelete ? "param-item pre-delete" : "param-item"}>
       <div className="icons-wrapper">
-        <a href="#anchor">
+        <HashLink to="#anchor">
           <img
             src={update}
             alt="#"
             className="update"
             onClick={() => onClickUpdate(id)}
           />
-        </a>
+        </HashLink>
         <img src={close} alt="#" className="close" onClick={onDeleteHandler} />
       </div>
       <div className="param-infomation-wrapper">
