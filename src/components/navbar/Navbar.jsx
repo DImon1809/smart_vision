@@ -17,7 +17,7 @@ const Navbar = () => {
     navigate("/form");
   };
 
-  const clickBurgerHandler = () => setActive(!active);
+  const clickBurgerHandler = (bool) => setActive(bool);
 
   return (
     <nav className="nav">
@@ -29,25 +29,35 @@ const Navbar = () => {
       >
         <ul className="nav-items">
           <li className="nav-item">
-            <Link to="/about">О приложении</Link>
+            <Link to="/about" onClick={() => clickBurgerHandler(false)}>
+              О приложении
+            </Link>
           </li>
           <li className="nav-item">
-            <Link to="/">Параметры</Link>
+            <Link to="/" onClick={() => clickBurgerHandler(false)}>
+              Параметры
+            </Link>
           </li>
-          <li className="nav-item" onClick={logOutHandler}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              logOutHandler();
+              clickBurgerHandler(false);
+            }}
+          >
             Выйти
           </li>
         </ul>
       </div>
       <div
         className={active ? "burger active" : "burger"}
-        onClick={clickBurgerHandler}
+        onClick={() => clickBurgerHandler(!active)}
       >
         <span></span>
       </div>
       <Wrapper
         wapperActive={active}
-        onWrapperClickHandler={clickBurgerHandler}
+        onWrapperClickHandler={() => clickBurgerHandler(false)}
       />
     </nav>
   );

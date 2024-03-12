@@ -3,9 +3,9 @@ import "./SmallButton.scss";
 import arrowBase from "../../../font/arrow-base.png";
 import arrowHead from "../../../font/arrow-head.png";
 
-const SmallButton = ({ children }) => {
+const SmallButton = ({ children, requestDataForGraphs }) => {
   return (
-    <div className="button">
+    <div className="button" onClick={requestDataForGraphs}>
       <p>{children}</p>
       <div className="arrow">
         <img src={arrowBase} alt="#" className="arrow-base" />

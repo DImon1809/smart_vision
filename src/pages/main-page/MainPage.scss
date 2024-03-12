@@ -52,6 +52,7 @@
   margin: 0 auto;
   padding: 40px;
   border-radius: 80px;
+  position: relative;
   transform: translateX(50%);
   opacity: 0.4;
   transition: transform 1s ease, opacity 1s ease;
@@ -59,6 +60,11 @@
   &.load {
     transform: translateY(-0);
     opacity: 1;
+  }
+
+  #anchor {
+    position: absolute;
+    top: -40%;
   }
 
   @media (max-width: 1000px) {

@@ -15,7 +15,7 @@ const AboutPage = () => {
         <div className="about-title">
           <h2>Как работает Smart Vision?</h2>
         </div>
-        <dip className="about-paragrh">
+        <div className="about-paragrh">
           <p>
             Система состоит из сборщика актуальных параметров, модуля анализа и
             пользовательского интерфейса. Состояние с анализируемых узлов
@@ -27,7 +27,7 @@ const AboutPage = () => {
             позволяет автоматизировать довольно рутинную работу по поиску ошибок
             и имеет все шансы стать незаменимым помощником для вашей компании.
           </p>
-        </dip>
+        </div>
 
         <div className="about-visual-wrapper">
           <div className="about-visual">

@@ -112,6 +112,16 @@
           padding: 0 30px;
           font-size: 14px;
 
+          @media (max-width: 700px) {
+            width: 82%;
+            padding: 0 26px;
+          }
+
+          @media (max-width: 500px) {
+            width: 84%;
+            padding: 0 20px;
+          }
+
           &:focus ~ label,
           &:not(:placeholder-shown) ~ label {
             top: -40px;

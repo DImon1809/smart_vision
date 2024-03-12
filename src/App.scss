@@ -14,10 +14,17 @@
   @media (max-width: 1000px) {
     --factor: 5;
   }
+
+  @media (max-width: 460px) {
+    --factor: 6;
+  }
 }
 
-body,
 html {
+  scroll-behavior: smooth;
+}
+
+body {
   margin: 0;
   padding: 0;
 }

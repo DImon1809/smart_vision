@@ -42,10 +42,6 @@ const AnalysisPage = () => {
   const [openFloorWind, setOpenFloorWind] = useState(false);
   const [floorText, setFloorText] = useState("Внимание");
 
-  const [instantDate, setInstantDate] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
-  const [instantTime, setInstantTime] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
   const [passedTests, setPassedTests] = useState(0);
   const [unPassedTests, setUnPassedTests] = useState(0);
   const [loadingDoughnut, setLoadingDoughnut] = useState(true);
@@ -83,7 +79,7 @@ const AnalysisPage = () => {
         label: "Ошибки",
         data: [
           ...histData,
-          histData.reduce((acc, prev) => (acc > prev ? acc : prev), 0) * 2,
+          histData.reduce((acc, prev) => (acc > prev ? acc : prev), 0) * 1.1,
         ],
         backgroundColor: "#E30000",
         borderColor: "#E30000",
@@ -105,22 +101,6 @@ const AnalysisPage = () => {
 
   const requestDataForGraphs = async (_instant, _to) => {
     try {
-      // const responseDoughnut = await axios({
-      //   method: "post",
-      //   url: `http://212.22.94.121:8080/api/params/graph/circle`,
-      //   data: {
-      //     paramIds: [id],
-      //     startTime: new Date(_instant.join(" ")).toISOString(),
-      //     endTime: new Date(_to.join(" ")).toISOString(),
-      //   },
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-
-      console.log(_instant);
-      console.log(_to);
-
       const responseDoughnut = await request(
         "post",
         `http://212.22.94.121:8080/api/params/graph/circle`,
@@ -133,8 +113,6 @@ const AnalysisPage = () => {
 
       setLoadingDoughnut(false);
 
-      console.log(responseDoughnut);
-
       setUnPassedTests(responseDoughnut.data[id]);
 
       const responseHist = await axios({
@@ -142,8 +120,8 @@ const AnalysisPage = () => {
         url: `http://212.22.94.121:8080/api/params/graph/hist`,
         data: {
           paramId: id,
-          startTime: new Date(_instant.join(" ")),
-          endTime: new Date(_to.join(" ")),
+          startTime: _instant,
+          endTime: _to,
           bandAmount: 5,
         },
         headers: {
@@ -164,6 +142,49 @@ const AnalysisPage = () => {
       setHistLabel(sortDate(_errorsX));
 
       setHistData(_errorsY);
+
+      setMinTime(
+        _instant
+          .split("T")
+          .map((first, firstIndex) =>
+            firstIndex === 1
+              ? first
+                  .split(".")[0]
+                  .split(":")
+                  .map((second, secondIndex) =>
+                    secondIndex === 0 ? Number(second) + 3 : second
+                  )
+                  .join(":")
+              : first
+          )
+          .at(-1)
+      );
+
+      setMinDate(_instant.split("T")[0]);
+
+      setMaxTime(
+        _to
+          .split("T")
+          .map((first, firstIndex) =>
+            firstIndex === 1
+              ? first
+                  .split(".")[0]
+                  .split(":")
+                  .map((second, secondIndex) =>
+                    secondIndex === 0 ? Number(second) + 3 : second
+                  )
+                  .join(":")
+              : first
+          )
+          .at(-1)
+      );
+
+      setMaxDate(_to.split("T")[0]);
+
+      if (responseDoughnut.data[id] === 0) {
+        setFloorText("Данные за указанное время не были найдены!");
+        setOpenFloorWind(true);
+      }
     } catch (err) {
       setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
@@ -184,7 +205,7 @@ const AnalysisPage = () => {
         `http://212.22.94.121:8080/api/params`
       );
 
-      const _titles = responseTitles.data.filter((_l) => _l.id === +id);
+      const _titles = responseTitles.data.filter((_l) => _l.id === Number(id));
 
       setTitles([_titles[0].name, _titles[0].collectorUrl]);
 
@@ -193,44 +214,17 @@ const AnalysisPage = () => {
         `http://212.22.94.121:8080/api/params/${id}/values?from=${from}&to=${to}`
       );
 
-      console.log(responseData);
-
       if (!responseData.data.length) {
         setFloorText("Ничего не найдено!");
 
         return setOpenFloorWind(true);
       }
 
-      // const _instant = new Date(
-      //   new Date(responseData.data[0].instant).getTime() - 300000
-      // )
-      //   .toLocaleString()
-      //   .split(", ")
-      //   .map((_l, index) =>
-      //     index === 0 ? _l.split(".").reverse().join("-") : _l
-      //   );
+      const data = responseData.data.filter(
+        (_l) => _l.paramId === Number(id)
+      )[0];
 
-      // const _to = new Date(new Date(to).getTime())
-      //   .toLocaleString()
-      //   .split(", ")
-      //   .map((_l, index) =>
-      //     index === 0 ? _l.split(".").reverse().join("-") : _l
-      //   );
-
-      // await requestDataForGraphs(_instant, _to);
-      await requestDataForGraphs(responseData.data[0].instant, to);
-
-      // setInstantTime(_instant[1]);
-      // setMinTime(_instant[1]);
-
-      // setInstantDate(_instant[0]);
-      // setMinDate(_instant[0]);
-
-      // setCurrentTime(_to[1]);
-      // setMaxTime(_to[1]);
-
-      // setCurrentDate(_to[0]);
-      // setMaxDate(_to[0]);
+      return await requestDataForGraphs(data.instant, to);
     } catch (err) {
       setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
@@ -238,6 +232,17 @@ const AnalysisPage = () => {
       console.error(err);
     }
   }, []);
+
+  const onClickSmallButton = async () => {
+    try {
+      await requestDataForGraphs(
+        new Date(`${minDate} ${minTime}`).toISOString(),
+        new Date(`${maxDate} ${maxTime}`).toISOString()
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     requestData();
@@ -266,15 +271,11 @@ const AnalysisPage = () => {
             <input
               type="time"
               value={minTime}
-              min={`${instantTime}`}
-              max={`${currentTime}`}
               onChange={(event) => setMinTime(event.target.value)}
             />
             <input
               type="date"
               value={minDate}
-              min={`${instantDate}`}
-              max={`${currentDate}`}
               onChange={(event) => setMinDate(event.target.value)}
             />
           </div>
@@ -283,20 +284,18 @@ const AnalysisPage = () => {
             <input
               type="time"
               value={maxTime}
-              min={`${instantTime}`}
-              max={`${currentTime}`}
               onChange={(event) => setMaxTime(event.target.value)}
             />
             <input
               type="date"
               value={maxDate}
-              min={`${instantDate}`}
-              max={`${currentDate}`}
               onChange={(event) => setMaxDate(event.target.value)}
             />
           </div>
         </div>
-        <SmallButton>Применить</SmallButton>
+        <SmallButton requestDataForGraphs={onClickSmallButton}>
+          Применить
+        </SmallButton>
       </div>
       <div className="analysis-result">
         <h2>Результаты</h2>

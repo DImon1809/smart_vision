@@ -33,8 +33,6 @@ const ParamsItem = ({
       `http://212.22.94.121:8080/api/params/${id}/status`
     );
 
-    console.log(response.data.paramStatus);
-
     if (response.data.paramStatus !== paramStatus) {
       response.data.paramStatus === "ERR" &&
         setFloorText(`У "${name}" превышен порог ошибок!`) &&
@@ -75,12 +73,14 @@ const ParamsItem = ({
   return (
     <div className={preDelete ? "param-item pre-delete" : "param-item"}>
       <div className="icons-wrapper">
-        <img
-          src={update}
-          alt="#"
-          className="update"
-          onClick={() => onClickUpdate(id)}
-        />
+        <a href="#anchor">
+          <img
+            src={update}
+            alt="#"
+            className="update"
+            onClick={() => onClickUpdate(id)}
+          />
+        </a>
         <img src={close} alt="#" className="close" onClick={onDeleteHandler} />
       </div>
       <div className="param-infomation-wrapper">

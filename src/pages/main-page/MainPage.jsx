@@ -16,11 +16,16 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { request, ready } = useHTTP();
 
-  const [name, setName] = useState("");
-  const [collectorUrl, setCollectorUrl] = useState("");
-  const [threshold, setThreshold] = useState("");
+  const [updateParam, setUpdateParam] = useState({
+    id: "",
+    name: "",
+    threshold: "",
+    depth: "",
+    pattern: "",
+    collectorUrl: "",
+  });
 
-  const [update, setUpdate] = useState(false);
+  const [updateButton, setUpdateButton] = useState(false);
 
   const [openFloorWind, setOpenFloorWind] = useState(false);
   const [floorText, setFloorText] = useState("Внимание");
@@ -45,26 +50,29 @@ const MainPage = () => {
 
   const genRandomId = () => Math.ceil(Math.random() * 100);
 
-  const setValuesInputs = (
-    valueName = "",
-    valueCollectorUrl = "",
-    valueThreshold = ""
-  ) => {
-    setName(valueName);
-    setCollectorUrl(valueCollectorUrl);
-    setThreshold(valueThreshold);
-  };
+  const setValuesInputs = (_param) => setUpdateParam(_param);
 
   const openCloseWrapperAndFloorWind = () => setOpenFloorWind(false);
 
   const requestData = useCallback(async () => {
     try {
+      setUpdateParam({
+        id: "",
+        name: "",
+        threshold: "",
+        depth: "",
+        pattern: "",
+        collectorUrl: "",
+      });
+
       const response = await request(
         "get",
         `http://212.22.94.121:8080/api/params`
       );
 
       setValidParams(response.data);
+
+      setUpdateButton(false);
 
       return response.data;
     } catch (err) {
@@ -78,16 +86,18 @@ const MainPage = () => {
   const onClickUpdate = (id) => {
     const _param = validParams.find((param) => param.id === id);
 
-    setValuesInputs(_param.name, _param.collectorUrl, _param.threshold);
+    setValuesInputs(_param);
 
-    return setUpdate(true);
+    return setUpdateButton(true);
   };
 
-  const createParam = async () => {
+  const updateParamReq = async () => {
     try {
-      let _id = genRandomId();
-
-      if (!name || !threshold || !collectorUrl) {
+      if (
+        !updateParam.name ||
+        !updateParam.threshold ||
+        !updateParam.collectorUrl
+      ) {
         setFloorText("Введите данные!");
 
         setAlertInput(true);
@@ -95,7 +105,49 @@ const MainPage = () => {
         return setOpenFloorWind(true);
       }
 
-      if (!(Number(threshold) - 0)) {
+      if (!(Number(updateParam.threshold) - 0)) {
+        setFloorText("Порог должен быть числом!");
+
+        setAlertInput(true);
+
+        return setOpenFloorWind(true);
+      }
+
+      await request("put", `http://212.22.94.121:8080/api/params`, updateParam);
+
+      setValuesInputs();
+
+      setFloorText("Параметр успешно обновлён!");
+
+      setOpenFloorWind(true);
+
+      return await requestData();
+    } catch (err) {
+      setFloorText("Что-то пошло не так!");
+
+      setOpenFloorWind(true);
+
+      console.error(err);
+    }
+  };
+
+  const createParam = async () => {
+    try {
+      let _id = genRandomId();
+
+      if (
+        !updateParam.name ||
+        !updateParam.threshold ||
+        !updateParam.collectorUrl
+      ) {
+        setFloorText("Введите данные!");
+
+        setAlertInput(true);
+
+        return setOpenFloorWind(true);
+      }
+
+      if (!(Number(updateParam.threshold) - 0)) {
         setFloorText("Порог должен быть числом!");
 
         setAlertInput(true);
@@ -106,20 +158,27 @@ const MainPage = () => {
       if (validParams.some((param) => param.id === _id))
         return await createParam();
 
-      await request("post", `http://212.22.94.121:8080/api/params`, {
-        id: _id,
-        name,
-        threshold,
-        depth: 60,
-        pattern: "404",
-        collectorUrl,
-      });
+      const responseCreate = await request(
+        "post",
+        `http://212.22.94.121:8080/api/params`,
+        {
+          id: _id,
+          name: updateParam.name,
+          threshold: updateParam.threshold,
+          depth: 60,
+          pattern: "404",
+          collectorUrl: updateParam.collectorUrl,
+        }
+      );
 
-      setValuesInputs();
-
-      setFloorText("Параметр успешно создан!");
-
-      setOpenFloorWind(true);
+      await request(
+        "post",
+        `http://212.22.94.121:8080/api/params/${responseCreate.data.id}/values`,
+        {
+          instant: new Date().toISOString(),
+          value: responseCreate.data.depth,
+        }
+      );
 
       return await requestData();
     } catch (err) {
@@ -162,10 +221,6 @@ const MainPage = () => {
         }
       );
 
-      setFloorText("Параметр создан!");
-
-      setOpenFloorWind(true);
-
       return await requestData();
     } catch (err) {
       setFloorText("Что-то пошло не так!");
@@ -184,11 +239,10 @@ const MainPage = () => {
         `http://212.22.94.121:8080/api/params/${id}/values`
       );
 
-      await request("delete", `http://212.22.94.121:8080/api/params/${id}`);
-
-      setFloorText("Параметр успешно удалён!");
-
-      setOpenFloorWind(true);
+      return await request(
+        "delete",
+        `http://212.22.94.121:8080/api/params/${id}`
+      );
     } catch (err) {
       setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
@@ -219,7 +273,7 @@ const MainPage = () => {
 
   useEffect(() => {
     setAlertInput(false);
-  }, [name, threshold, collectorUrl]);
+  }, [updateParam]);
 
   return (
     <section
@@ -236,6 +290,7 @@ const MainPage = () => {
         />
       )}
       <div className={loadingPage ? "fuctional-card load" : "fuctional-card"}>
+        <div id="anchor"></div>
         <div className="create-params">
           <div className="create-params-text">
             <h3>Создать параметр</h3>
@@ -246,8 +301,10 @@ const MainPage = () => {
               <input
                 type="text"
                 placeholder="Введите название..."
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                value={updateParam.name}
+                onChange={(event) =>
+                  setUpdateParam({ ...updateParam, name: event.target.value })
+                }
               />
             </div>
 
@@ -256,8 +313,13 @@ const MainPage = () => {
               <input
                 type="text"
                 placeholder="Введите url..."
-                value={collectorUrl}
-                onChange={(event) => setCollectorUrl(event.target.value)}
+                value={updateParam.collectorUrl}
+                onChange={(event) =>
+                  setUpdateParam({
+                    ...updateParam,
+                    collectorUrl: event.target.value,
+                  })
+                }
               />
             </div>
 
@@ -266,13 +328,18 @@ const MainPage = () => {
               <input
                 type="text"
                 placeholder="Максимум ошибок..."
-                value={threshold}
-                onChange={(event) => setThreshold(event.target.value)}
+                value={updateParam.threshold}
+                onChange={(event) =>
+                  setUpdateParam({
+                    ...updateParam,
+                    threshold: event.target.value,
+                  })
+                }
               />
             </div>
 
-            {update ? (
-              <BigButton>Обновить</BigButton>
+            {updateButton ? (
+              <BigButton onClickHandler={updateParamReq}>Обновить</BigButton>
             ) : (
               <BigButton onClickHandler={createParam}>Создать</BigButton>
             )}
