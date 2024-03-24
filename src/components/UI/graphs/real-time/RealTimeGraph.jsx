@@ -153,7 +153,7 @@ const RealTimeGraph = ({ id }) => {
         );
 
         const time = getOneTimeAndDate(_key);
-        const maxValue = Math.abs(Number(_data[keys.at(-1)]));
+        const maxValue = Math.abs(Number(_data[keys.at(-1)]) + 1);
 
         if (_xData.length >= 4) {
           _xData.push(time);
