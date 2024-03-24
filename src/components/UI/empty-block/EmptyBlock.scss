@@ -1,0 +1,43 @@
+@mixin params-text($size: 18px, $weight: 600, $color: #fff) {
+  font-size: $size;
+  font-weight: $weight;
+  color: $color;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.param-alert {
+  width: 600px;
+  height: 140px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 1px 1px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin: 40px auto;
+
+  @media (max-width: 900px) {
+    width: 500px;
+    height: 125px;
+  }
+
+  @media (max-width: 660px) {
+    width: 400px;
+    height: 100px;
+  }
+
+  @media (max-width: 500px) {
+    width: 300px;
+    height: 75px;
+  }
+
+  h3 {
+    @include params-text(20px, 400, black);
+
+    @media (max-width: 500px) {
+      @include params-text(18px, 400, black);
+    }
+  }
+}

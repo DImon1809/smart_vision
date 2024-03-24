@@ -1,0 +1,130 @@
+@mixin chart-infomation {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.chart-wrapper-doughnut {
+  width: 50%;
+  padding: 20px 0;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 1px 1px black;
+  border-radius: 20px;
+  font-family: "Montserrat", sans-serif;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 400;
+    color: black;
+    font-family: "Montserrat", sans-serif;
+    margin: auto;
+  }
+
+  @media (max-width: 1100px) {
+    width: 80%;
+  }
+
+  @media (max-width: 900px) {
+    width: 90%;
+  }
+
+  @media (max-width: 700px) {
+    width: 94%;
+  }
+
+  @media (max-width: 660px) {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  @media (max-width: 560px) {
+    width: 80%;
+  }
+
+  @media (max-width: 420px) {
+    width: 88%;
+  }
+
+  .doughnut {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+
+    @media (max-width: 700px) {
+      &-infomation {
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+
+    @media (max-width: 520px) {
+      &-infomation {
+        p {
+          font-size: 13px;
+        }
+      }
+    }
+
+    @media (max-width: 460px) {
+      &-infomation {
+        margin: 0 20px;
+
+        margin-left: 20px;
+        p {
+          font-size: 12px;
+        }
+      }
+    }
+
+    @media (max-width: 760px) {
+      width: 180px;
+      height: 180px;
+    }
+
+    @media (max-width: 520px) {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  .item-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    div {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    .teal {
+      background-color: teal;
+    }
+
+    .chocolate {
+      background-color: chocolate;
+    }
+
+    .sandy-brown {
+      background-color: saddlebrown;
+    }
+
+    .cornflower-blue {
+      background-color: cornflowerblue;
+    }
+
+    .steel-blue {
+      background-color: steelblue;
+    }
+  }
+}

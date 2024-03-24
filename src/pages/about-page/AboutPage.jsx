@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "./AboutPage.scss";
 
 const AboutPage = () => {
   const [loading, setLoading] = useState(false);
 
+  const anchorRef = useRef();
+
   useEffect(() => {
     setLoading(true);
   }, []);
 
+  useEffect(() => {
+    anchorRef.current.scrollIntoView();
+  }, []);
+
   return (
     <section className="about-section">
+      <div ref={anchorRef} style={{ position: "absolute", top: 0 }}></div>
       <div className={loading ? "about-wrapper load" : "about-wrapper"}>
         <div className="about-title">
           <h2>Как работает Smart Vision?</h2>

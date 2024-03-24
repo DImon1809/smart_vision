@@ -26,7 +26,8 @@ const ParamsItem = ({
   const { request, ready } = useHTTP();
 
   const [preDelete, setPreDelete] = useState(false);
-  const [paramStatus, setParamStatus] = useState("ERR");
+  // const [paramStatus, setParamStatus] = useState("PEN");
+  const [paramStatus, setParamStatus] = useState("PEN");
 
   const getParamStatus = useCallback(async () => {
     const response = await request(
@@ -34,13 +35,22 @@ const ParamsItem = ({
       `http://212.22.94.121:8080/api/params/${id}/status`
     );
 
-    if (response.data.paramStatus !== paramStatus) {
-      response.data.paramStatus === "ERR" &&
-        setFloorText(`У "${name}" превышен порог ошибок!`) &&
-        setOpenFloorWind(true);
+    // if (response.data.paramStatus !== paramStatus) {
+    //   response.data.paramStatus === "ERR" &&
+    //     setFloorText(`У "${name}" превышен порог ошибок!`) &&
+    //     setOpenFloorWind(true);
 
-      setParamStatus(response.data.paramStatus);
+    //   setParamStatus(response.data.paramStatus);
+    // }
+
+    if (!response.data.status) {
+      setFloorText(`У "${name}" превышен порог ошибок!`);
+      setOpenFloorWind(true);
+
+      setParamStatus(response.data.status);
     }
+
+    setParamStatus(response.data.status);
   }, [request]);
 
   const onDeleteHandler = async () => {
@@ -68,7 +78,7 @@ const ParamsItem = ({
 
         console.error(err);
       }
-    }, 10000);
+    }, 5000);
   }, [id]);
 
   return (
@@ -96,30 +106,54 @@ const ParamsItem = ({
         </div>
 
         <div
+          // className={
+          //   paramStatus === "ERR"
+          //     ? "circle-param-item err"
+          //     : paramStatus === "WARN"
+          //     ? "circle-param-item warn"
+          //     : paramStatus === "OK"
+          //     ? "circle-param-item ok"
+          //     : "circle-param-item"
+          // }
+
           className={
-            paramStatus === "ERR"
-              ? "circle-param-item err"
-              : paramStatus === "warn"
-              ? "circle-param-item warn"
+            paramStatus
+              ? paramStatus === "PEN"
+                ? "circle-param-item"
+                : "circle-param-item ok"
               : "circle-param-item"
           }
         >
-          {paramStatus === "ERR"
+          {/* {paramStatus === "ERR"
             ? "ERR"
-            : paramStatus === "warn"
-            ? "WARN"
-            : "OK"}
+            : paramStatus === "WARN"
+            ? "WRN"
+            : paramStatus === "OK"
+            ? "OK"
+            : "PEN"} */}
+
+          {paramStatus ? (paramStatus === "PEN" ? "WRN" : "OK") : "ERR"}
         </div>
       </div>
+
       <div
+        // className={
+        //   paramStatus === "ERR"
+        //     ? "param-item-button err"
+        //     : paramStatus === "WARN"
+        //     ? "param-item-button warn"
+        //     : paramStatus === "OK"
+        //     ? "param-item-button ok"
+        //     : "param-item-button"
+        // }
         className={
-          paramStatus === "ERR"
-            ? "param-item-button err"
-            : paramStatus === "warn"
-            ? "param-item-button warn"
-            : "param-item-button"
+          paramStatus
+            ? paramStatus === "PEN"
+              ? "param-item-button"
+              : "param-item-button ok"
+            : "param-item-button err"
         }
-        onClick={() => redirectToAnalysis(id)}
+        onClick={() => redirectToAnalysis(id, paramStatus)}
       >
         <p>Анализировать</p>
         <div className="arrow">

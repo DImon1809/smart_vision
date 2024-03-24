@@ -1,54 +1,56 @@
 export const useSortDate = () => {
-  const sortDate = (_errorsX) => {
-    let _t = _errorsX
-      .map((first) =>
-        first
-          .split(",")
-          .map((second) => String(new Date(second)).split(" ").slice(1, 5))
-      )
-      .flat(1);
+  const getCleanerDate = (_date) => {
+    let mounth = _date[0].split(".");
+    let time = _date[1].split(":");
 
-    let _res = [];
+    mounth = [mounth[0], mounth[1]].join(".");
+    time = [time[0], time[1]].join(":");
 
-    for (let i = 1; i < _t.length; i += 2) {
-      let count = Number(
-        _t[i - 1][3]
-          .split(":")
-          .map((_l, index) => (index !== 2 ? _l : ""))
-          .filter((_l) => _l !== "")
-          .join("")
-      );
-
-      _res.push([
-        count,
-        [
-          _t[i - 1][1],
-          _t[i - 1][0],
-          _t[i - 1][3]
-            .split(":")
-            .map((_l, index) => (index !== 2 ? _l : ""))
-            .filter((_l) => _l !== "")
-            .join(":"),
-        ].join(" "),
-        "\t",
-        [
-          _t[i][1],
-          _t[i][0],
-          _t[i][3]
-            .split(":")
-            .map((_l, index) => (index !== 2 ? _l : ""))
-            .filter((_l) => _l !== "")
-            .join(":"),
-        ].join(" "),
-      ]);
-    }
-
-    _t = _res
-      .sort((left, right) => left[0] - right[0])
-      .map((_l) => _l.slice(1, _l.length));
-
-    return _t;
+    return [mounth, time].join(" ");
   };
 
-  return { sortDate };
+  const getMinutsAndSeconds = (time) => {
+    time = time.split(":");
+
+    return [time[1], time[2]].join(":");
+  };
+
+  const sortDate = (_errorsX) => {
+    let _arrDates = _errorsX
+      .map((first) => first.split(","))
+      .sort((left, right) => new Date(left[0]) - new Date(right[0]));
+
+    let resultArrDates = [];
+
+    for (let i = 0; i < _arrDates.length; i++) {
+      let left = new Date(_arrDates[i][0]).toLocaleString().split(", ");
+      let right = new Date(_arrDates[i][1]).toLocaleString().split(", ");
+
+      resultArrDates.push([getCleanerDate(left), "\t", getCleanerDate(right)]);
+    }
+
+    return resultArrDates;
+  };
+
+  const getTimeAndDate = (instant, to) => {
+    let [minDate, minTime] = new Date(instant).toLocaleString().split(", ");
+
+    let [maxDate, maxTime] = new Date(to).toLocaleString().split(", ");
+
+    minDate = minDate.split(".").reverse().join("-");
+
+    maxDate = maxDate.split(".").reverse().join("-");
+
+    return { minTime, maxTime, minDate, maxDate };
+  };
+
+  const getOneTimeAndDate = (_date) => {
+    // console.log(_date);
+    let [left] = _date.split(",");
+    let [_, time] = new Date(left).toLocaleString().split(", ");
+
+    return getMinutsAndSeconds(time);
+  };
+
+  return { sortDate, getTimeAndDate, getOneTimeAndDate };
 };

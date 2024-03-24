@@ -13,15 +13,19 @@
   justify-content: center;
 
   @media (max-height: 450px) {
-    height: 120vh;
+    height: 130vh;
+  }
+
+  @media (max-height: 340px) {
+    height: 150vh;
   }
 
   @media (max-height: 300px) {
-    height: 200vh;
+    height: 220vh;
   }
 
   @media (max-height: 200px) {
-    height: 260vh;
+    height: 280vh;
   }
 
   .animation-form {

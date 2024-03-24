@@ -43,11 +43,15 @@
 }
 
 .analysis-infomation-wrapper {
-  width: 70%;
+  width: 50%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 40px;
+  border-radius: 80px;
+  box-shadow: 0px 0.2px 0px 0.2px black;
 
   @media (max-width: 1000px) {
     width: 80%;
@@ -78,6 +82,12 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+
+    input {
+      outline: none;
+      background-color: transparent;
+      border: 1px solid #000;
+    }
 
     @media (max-width: 560px) {
       flex-direction: column;
@@ -110,185 +120,6 @@
 
     @media (max-width: 700px) {
       font-size: 18px;
-    }
-  }
-
-  .chart-wrapper-doughnut {
-    width: 60%;
-    padding: 20px 0;
-    margin: 40px auto;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0px 1px 1px black;
-    border-radius: 20px;
-
-    @media (max-width: 1100px) {
-      width: 80%;
-    }
-
-    @media (max-width: 900px) {
-      width: 90%;
-    }
-
-    @media (max-width: 700px) {
-      width: 94%;
-    }
-
-    @media (max-width: 660px) {
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .doughnut {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto;
-
-      @media (max-width: 700px) {
-        &-infomation {
-          p {
-            font-size: 14px;
-          }
-        }
-      }
-
-      @media (max-width: 460px) {
-        &-infomation {
-          p {
-            font-size: 13px;
-          }
-        }
-      }
-
-      @media (max-width: 460px) {
-        &-infomation {
-          margin: 0 20px;
-
-          margin-left: 20px;
-          p {
-            font-size: 12px;
-          }
-        }
-      }
-
-      @media (max-width: 760px) {
-        width: 180px;
-        height: 180px;
-      }
-
-      @media (max-width: 520px) {
-        width: 160px;
-        height: 160px;
-      }
-    }
-
-    .red,
-    .yellow {
-      width: 32px;
-      height: 32px;
-
-      @media (max-width: 460px) {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .red {
-      background-color: #e30000;
-
-      @media (max-width: 460px) {
-        margin-right: 10px;
-      }
-
-      &-wrapper {
-        @include chart-infomation;
-
-        @media (max-width: 460px) {
-          gap: 6px;
-        }
-      }
-    }
-
-    .yellow {
-      background-color: yellow;
-
-      @media (max-width: 400px) {
-        width: 32px;
-      }
-
-      @media (max-width: 380px) {
-        width: 33px;
-      }
-
-      @media (max-width: 370px) {
-        width: 35px;
-      }
-
-      &-wrapper {
-        @include chart-infomation;
-
-        @media (max-width: 460px) {
-          gap: 10px;
-        }
-
-        @media (max-width: 400px) {
-          gap: 20px;
-        }
-      }
-    }
-  }
-
-  .chart-wrapper-hist {
-    width: 60%;
-    padding: 40px 0;
-    margin: 40px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0px 1px 1px black;
-    border-radius: 20px;
-
-    @media (max-width: 1100px) {
-      width: 80%;
-    }
-
-    @media (max-width: 900px) {
-      width: 90%;
-    }
-
-    @media (max-width: 700px) {
-      width: 94%;
-    }
-
-    .hist {
-      width: 560px;
-      height: 280px;
-
-      @media (max-width: 660px) {
-        width: 460px;
-        height: 230px;
-      }
-
-      @media (max-width: 520px) {
-        width: 400px;
-        height: 200px;
-      }
-
-      @media (max-width: 460px) {
-        width: 370px;
-        // height: 180px;
-      }
-
-      @media (max-width: 400px) {
-        width: 330px;
-      }
     }
   }
 }
