@@ -1,4 +1,4 @@
-@mixin nav-tem($size: 18px, $weight: 600, $color: #fff) {
+@mixin nav-tem($size: 16px, $weight: 600, $color: #fff) {
   font-size: $size;
   font-weight: $weight;
   color: $color;
@@ -84,34 +84,38 @@
         cursor: pointer;
         transition: all 0.5s ease-in-out;
 
-        @media (max-width: 720px) {
-          @include nav-tem(16px);
+        @media (max-width: 900px) {
+          @include nav-tem(14px);
         }
 
         @media (max-width: 600px) {
           cursor: default;
         }
 
-        @media (max-width: 460px) {
-          @include nav-tem(14px);
-        }
+        // @media (max-width: 460px) {
+        //   @include nav-tem(14px);
+        // }
 
         a {
           text-decoration: none;
           @include nav-tem;
           transition: all 0.6s ease-in-out;
 
-          @media (max-width: 720px) {
-            @include nav-tem(16px);
+          @media (max-width: 900px) {
+            @include nav-tem(14px);
           }
+
+          // @media (max-width: 720px) {
+          //   @include nav-tem(16px);
+          // }
 
           @media (max-width: 600px) {
             cursor: default;
           }
 
-          @media (max-width: 460px) {
-            @include nav-tem(14px);
-          }
+          // @media (max-width: 460px) {
+          //   @include nav-tem(14px);
+          // }
 
           @media (hover: hover) {
             &:hover {

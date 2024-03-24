@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { HashLink } from "react-router-hash-link";
 import { useHTTP } from "../../hooks/useHTTP";
 
+import FloorWindow from "../../components/floor-window/FloorWindow";
+
 import "./ParamsItem.scss";
 
 import arrowBase from "../../font/arrow-base.png";
@@ -12,22 +14,23 @@ import update from "../../font/update.png";
 const ParamsItem = ({
   name,
   collectorUrl,
-  threshold,
-  depth,
+  pattern,
   id,
   count,
-  sleep,
   deleteParams,
   onClickUpdate,
   redirectToAnalysis,
-  setOpenFloorWind,
-  setFloorText,
 }) => {
   const { request, ready } = useHTTP();
 
   const [preDelete, setPreDelete] = useState(false);
-  // const [paramStatus, setParamStatus] = useState("PEN");
   const [paramStatus, setParamStatus] = useState("PEN");
+
+  const [openFloorWind, setOpenFloorWind] = useState(false);
+  const [floorText, setFloorText] = useState("Внимание");
+  const [floorButton, setFloorButton] = useState(false);
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const getParamStatus = useCallback(async () => {
     const response = await request(
@@ -35,31 +38,18 @@ const ParamsItem = ({
       `http://212.22.94.121:8080/api/params/${id}/status`
     );
 
-    // if (response.data.paramStatus !== paramStatus) {
-    //   response.data.paramStatus === "ERR" &&
-    //     setFloorText(`У "${name}" превышен порог ошибок!`) &&
-    //     setOpenFloorWind(true);
-
-    //   setParamStatus(response.data.paramStatus);
-    // }
-
-    if (!response.data.status) {
-      setFloorText(`У "${name}" превышен порог ошибок!`);
-      setOpenFloorWind(true);
-
-      setParamStatus(response.data.status);
-    }
-
     setParamStatus(response.data.status);
   }, [request]);
 
-  const onDeleteHandler = async () => {
+  const confirmDeleteHandler = (bool) => setConfirmDelete(bool);
+
+  const onDeleteHandler = () => {
     try {
-      setPreDelete(true);
+      setFloorText("Подтвердите удаление");
 
-      await sleep(500);
+      setFloorButton(true);
 
-      return await deleteParams(id);
+      setOpenFloorWind(true);
     } catch (err) {
       console.error(err);
     }
@@ -81,8 +71,33 @@ const ParamsItem = ({
     }, 5000);
   }, [id]);
 
+  useEffect(() => {
+    if (confirmDelete) {
+      setPreDelete(true);
+
+      setTimeout(() => {
+        deleteParams(id);
+      }, 500);
+    }
+  }, [confirmDelete]);
+
+  useEffect(() => {
+    if (!paramStatus) {
+      setFloorText(`У "${name}" превышен порог ошибок!`);
+      setOpenFloorWind(true);
+    }
+  }, [paramStatus]);
+
   return (
     <div className={preDelete ? "param-item pre-delete" : "param-item"}>
+      {openFloorWind && (
+        <FloorWindow
+          setOpenFloorWind={setOpenFloorWind}
+          floorText={floorText}
+          floorButton={floorButton}
+          confirmDeleteHandler={confirmDeleteHandler}
+        />
+      )}
       <div className="icons-wrapper">
         <HashLink to="#anchor">
           <img
@@ -98,7 +113,12 @@ const ParamsItem = ({
         <div className="param-text-wrapper">
           <div className="param-title-wrapper">
             <p className="param-number">{count}.</p>
-            <p className="param-title">{name}</p>
+            <p className="param-title">
+              {name}{" "}
+              {collectorUrl === "localhost"
+                ? " с типом: " + 404
+                : " с типом: " + pattern}
+            </p>
           </div>
           <div className="param-value-wrapper">
             <p className="param-value">{collectorUrl}</p>
@@ -106,46 +126,19 @@ const ParamsItem = ({
         </div>
 
         <div
-          // className={
-          //   paramStatus === "ERR"
-          //     ? "circle-param-item err"
-          //     : paramStatus === "WARN"
-          //     ? "circle-param-item warn"
-          //     : paramStatus === "OK"
-          //     ? "circle-param-item ok"
-          //     : "circle-param-item"
-          // }
-
           className={
             paramStatus
               ? paramStatus === "PEN"
                 ? "circle-param-item"
                 : "circle-param-item ok"
-              : "circle-param-item"
+              : "circle-param-item err"
           }
         >
-          {/* {paramStatus === "ERR"
-            ? "ERR"
-            : paramStatus === "WARN"
-            ? "WRN"
-            : paramStatus === "OK"
-            ? "OK"
-            : "PEN"} */}
-
-          {paramStatus ? (paramStatus === "PEN" ? "WRN" : "OK") : "ERR"}
+          {paramStatus ? (paramStatus === "PEN" ? "PEN" : "OK") : "ERR"}
         </div>
       </div>
 
       <div
-        // className={
-        //   paramStatus === "ERR"
-        //     ? "param-item-button err"
-        //     : paramStatus === "WARN"
-        //     ? "param-item-button warn"
-        //     : paramStatus === "OK"
-        //     ? "param-item-button ok"
-        //     : "param-item-button"
-        // }
         className={
           paramStatus
             ? paramStatus === "PEN"

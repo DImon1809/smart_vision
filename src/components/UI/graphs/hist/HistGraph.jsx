@@ -41,6 +41,7 @@ const HistGraph = ({
   const [histData, setHistData] = useState([]);
 
   const options = {
+    responsive: true,
     legend: {
       display: false,
     },
@@ -75,6 +76,8 @@ const HistGraph = ({
         }
       );
 
+      // console.log(response);
+
       setLoadingHist(false);
 
       const _errorsX = Object.keys(response.data);
@@ -100,7 +103,7 @@ const HistGraph = ({
     } catch (err) {
       setLoadingHist(true);
 
-      setFloorText("Что-то не так!");
+      setFloorText("Что-то пошло не так!");
       setOpenFloorWind(true);
 
       console.error(err);

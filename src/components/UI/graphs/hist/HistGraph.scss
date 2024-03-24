@@ -21,6 +21,10 @@
     width: 94%;
   }
 
+  @media (max-width: 400px) {
+    padding: 40px 0 20px;
+  }
+
   .hist {
     width: 560px;
     height: 280px;
@@ -36,12 +40,7 @@
     }
 
     @media (max-width: 460px) {
-      width: 370px;
-      // height: 180px;
-    }
-
-    @media (max-width: 400px) {
-      width: 330px;
+      width: 100%;
     }
   }
 }

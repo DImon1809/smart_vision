@@ -45,9 +45,8 @@ export const useSortDate = () => {
   };
 
   const getOneTimeAndDate = (_date) => {
-    // console.log(_date);
-    let [left] = _date.split(",");
-    let [_, time] = new Date(left).toLocaleString().split(", ");
+    let [_, right] = _date.split(",");
+    let [__, time] = new Date(right).toLocaleString().split(", ");
 
     return getMinutsAndSeconds(time);
   };

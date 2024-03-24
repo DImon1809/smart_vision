@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Chart,
   CategoryScale,
@@ -30,8 +30,6 @@ import "./RealTimeGraph.scss";
 const RealTimeGraph = ({ id }) => {
   const { request } = useHTTP();
 
-  const chartRef = useRef();
-
   const { getOneTimeAndDate } = useSortDate();
 
   const [xData, setXData] = useState([]);
@@ -41,19 +39,17 @@ const RealTimeGraph = ({ id }) => {
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(20);
 
-  console.log(min);
-
   const data = {
     labels: xData,
     datasets: [
       {
-        label: "Ошибки",
+        label: "Ошибки за последние 5 секунд",
         data: yData,
         pointStyle: false,
         fill: true,
         borderWidth: 1,
-        borderColor: "rgba(74, 169, 230, 0.5)",
-        backgroundColor: "rgba(74, 169, 230, 0.5)",
+        borderColor: "rgba(95, 158, 160, 0.5)",
+        backgroundColor: "rgba(95, 158, 160, 1)",
         tension: 0.4,
       },
     ],
@@ -62,22 +58,20 @@ const RealTimeGraph = ({ id }) => {
   const options = {
     scales: {
       x: {
-        // min: 0,
-        // max: 20,
         min,
         max,
         ticks: {
           autoSkip: true,
           maxRotation: 0,
-          color: "rgba(74, 169, 230, 0.9)",
+          color: "rgba(95, 158, 160, 1)",
         },
 
         border: {
-          color: "rgba(74, 169, 230, 1)",
+          color: "rgba(95, 158, 160, 1)",
         },
 
         grid: {
-          color: "rgba(74, 169, 230, 0.3)",
+          color: "rgba(95, 158, 160, 0.3)",
         },
       },
 
@@ -85,22 +79,22 @@ const RealTimeGraph = ({ id }) => {
         ticks: {
           autoSkip: true,
           maxRotation: 0,
-          color: "rgba(74, 169, 230, 0.9)",
+          color: "rgba(95, 158, 160, 1)",
         },
 
         border: {
-          color: "rgba(74, 169, 230, 1)",
+          color: "rgba(95, 158, 160, 1)",
         },
 
         grid: {
-          color: "rgba(74, 169, 230, 0.3)",
+          color: "rgba(95, 158, 160, 0.3)",
         },
       },
     },
 
     plugins: {
       legend: {
-        display: false,
+        display: true,
       },
     },
 
@@ -114,7 +108,7 @@ const RealTimeGraph = ({ id }) => {
     try {
       await request(
         "get",
-        `http://212.22.94.121:8080/api/params/${id}/values/start-test-generation?timeout=6&interval=5&min=20&max=40`
+        `http://212.22.94.121:8080/api/params/${id}/values/start-test-generation?timeout=6&interval=5&min=1&max=10`
       );
     } catch (err) {
       console.error(err);
@@ -149,15 +143,17 @@ const RealTimeGraph = ({ id }) => {
 
         await requestByCreateData();
 
-        const { maxValue, date } = keys.reduce(
-          (acc, prev) =>
-            _data[prev] > acc.maxValue
-              ? { maxValue: _data[prev], date: prev }
-              : acc,
-          { maxValue: 0, date: "" }
+        const sortKeys = keys
+          .map((first) => first.split(","))
+          .flat(1)
+          .sort((left, right) => new Date(right) - new Date(left));
+
+        const _key = keys.find((first) =>
+          first.split(",").includes(sortKeys[0])
         );
 
-        const time = getOneTimeAndDate(date);
+        const time = getOneTimeAndDate(_key);
+        const maxValue = Math.abs(Number(_data[keys.at(-1)]));
 
         if (_xData.length >= 4) {
           _xData.push(time);

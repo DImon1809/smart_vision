@@ -14,10 +14,12 @@ import DoughnutGraph from "../../components/UI/graphs/doughnut/DoughnutGraph.jsx
 import "./MainPage.scss";
 
 import pencil from "../../font/pencil.png";
+import asterisc from "../../font/asterisc.png";
 
 const MainPage = () => {
   const navigate = useNavigate();
   const { request, ready } = useHTTP();
+
   const patternRef = useRef();
 
   const [updateParam, setUpdateParam] = useState({
@@ -32,6 +34,7 @@ const MainPage = () => {
 
   const [openFloorWind, setOpenFloorWind] = useState(false);
   const [floorText, setFloorText] = useState("Внимание");
+  const [floorButton, setFloorButton] = useState(false);
 
   const [loadingPage, setLoadingPage] = useState(false);
   const [alertInput, setAlertInput] = useState(false);
@@ -42,7 +45,7 @@ const MainPage = () => {
   const anchorRef = useRef();
 
   const httpReg =
-    /(^http?:\/\/)(\b[0-9]{2}\b).(\b[0-9]{1}\b).(\b[0-9]{2}\b).(\b[0-9]{3}\b):(\b[0-9]{4}\b).$/gi;
+    /(^http?:\/\/)([0-9]+).([0-9]+).([0-9]+).([0-9]+):([0-9]+).$/gi;
   const httpsReg =
     /(^https?:\/\/)?[a-z0-9~_\-\.]+\.[a-z]{2,9}(\/|:|\?[!-~]*)?$/gi;
 
@@ -143,8 +146,8 @@ const MainPage = () => {
         return setOpenFloorWind(true);
       }
 
-      if (updateParam.name.length > 15) {
-        setFloorText("Название не должно превышать 15 символов!");
+      if (updateParam.name.length > 10) {
+        setFloorText("Название не должно превышать 10 символов!");
 
         setAlertInput(true);
 
@@ -170,6 +173,16 @@ const MainPage = () => {
         return setOpenFloorWind(true);
       }
 
+      if (
+        validParams.find((_l) => _l.name === updateParam.name) &&
+        validParams.find((_l) => _l.pattern === patternRef.current.value) &&
+        !validParams.find((_l) => _l.id === updateParam.id)
+      ) {
+        setFloorText("Метрика с таким именем и типом ошибок уже существует!");
+
+        return setOpenFloorWind(true);
+      }
+
       await request("put", `http://212.22.94.121:8080/api/params`, {
         ...updateParam,
         pattern: patternRef.current.value,
@@ -177,7 +190,7 @@ const MainPage = () => {
 
       setValuesInputs();
 
-      setFloorText("Параметр успешно обновлён!");
+      setFloorText("Метрика успешно обновлена!");
 
       setOpenFloorWind(true);
 
@@ -196,7 +209,7 @@ const MainPage = () => {
       let _id = genRandomId();
 
       if (validParams.length >= 5) {
-        setFloorText("Нельзя создавать больше пяти параметров!");
+        setFloorText("Нельзя создавать больше пяти метрик!");
 
         setAlertInput(true);
 
@@ -235,8 +248,8 @@ const MainPage = () => {
         return setOpenFloorWind(true);
       }
 
-      if (updateParam.name.length > 15) {
-        setFloorText("Название не должно превышать 15 символов!");
+      if (updateParam.name.length > 10) {
+        setFloorText("Название не должно превышать 10 символов!");
 
         setAlertInput(true);
 
@@ -250,6 +263,15 @@ const MainPage = () => {
         setFloorText("Порог и глубина должны быть числами!");
 
         setAlertInput(true);
+
+        return setOpenFloorWind(true);
+      }
+
+      if (
+        validParams.find((_l) => _l.name === updateParam.name) &&
+        validParams.find((_l) => _l.pattern === patternRef.current.value)
+      ) {
+        setFloorText("Метрика с таким именем и типом ошибок уже существует!");
 
         return setOpenFloorWind(true);
       }
@@ -293,7 +315,7 @@ const MainPage = () => {
       const _checkReq = await requestData();
 
       if (validParams.length >= 5) {
-        setFloorText("Нельзя создавать больше пяти параметров!");
+        setFloorText("Нельзя создавать больше пяти метрик!");
 
         setAlertInput(true);
 
@@ -301,7 +323,7 @@ const MainPage = () => {
       }
 
       if (_checkReq.length) {
-        setFloorText("Параметр уже создан!");
+        setFloorText("Тестовая метрика уже создана!");
 
         return setOpenFloorWind(true);
       }
@@ -311,7 +333,7 @@ const MainPage = () => {
         `http://212.22.94.121:8080/api/params`,
         {
           id: 1,
-          name: "Ошибки 404",
+          name: "Ошибки",
           threshold: 20,
           depth: 60,
           pattern: "404",
@@ -398,6 +420,7 @@ const MainPage = () => {
         <FloorWindow
           setOpenFloorWind={setOpenFloorWind}
           floorText={floorText}
+          floorButton={floorButton}
         />
       )}
       <div ref={anchorRef} style={{ position: "absolute", top: 0 }}></div>
@@ -410,9 +433,15 @@ const MainPage = () => {
           <div className="params-inputs-wrapper">
             <div className={alertInput ? "params-input alert" : "params-input"}>
               <img src={pencil} alt="#" className="pencil" />
+              {alertInput && !updateParam.name && (
+                <img src={asterisc} alt="#" className="asterisc" />
+              )}
               <input
                 type="text"
                 placeholder="Введите название..."
+                className={
+                  alertInput && !updateParam.name ? "input alert" : "input"
+                }
                 value={updateParam.name}
                 onChange={(event) =>
                   setUpdateParam({ ...updateParam, name: event.target.value })
@@ -422,9 +451,17 @@ const MainPage = () => {
 
             <div className={alertInput ? "params-input alert" : "params-input"}>
               <img src={pencil} alt="#" className="pencil" />
+              {alertInput && !updateParam.collectorUrl && (
+                <img src={asterisc} alt="#" className="asterisc" />
+              )}
               <input
                 type="text"
                 placeholder="Введите url..."
+                className={
+                  alertInput && !updateParam.collectorUrl
+                    ? "input alert"
+                    : "input"
+                }
                 value={updateParam.collectorUrl}
                 onChange={(event) =>
                   setUpdateParam({
@@ -437,9 +474,15 @@ const MainPage = () => {
 
             <div className={alertInput ? "params-input alert" : "params-input"}>
               <img src={pencil} alt="#" className="pencil" />
+              {alertInput && !updateParam.threshold && (
+                <img src={asterisc} alt="#" className="asterisc" />
+              )}
               <input
                 type="text"
                 placeholder="Граница ошибок..."
+                className={
+                  alertInput && !updateParam.threshold ? "input alert" : "input"
+                }
                 value={updateParam.threshold}
                 onChange={(event) =>
                   setUpdateParam({
@@ -452,9 +495,15 @@ const MainPage = () => {
 
             <div className={alertInput ? "params-input alert" : "params-input"}>
               <img src={pencil} alt="#" className="pencil" />
+              {alertInput && !updateParam.depth && (
+                <img src={asterisc} alt="#" className="asterisc" />
+              )}
               <input
                 type="text"
                 placeholder="Максимум ошибок..."
+                className={
+                  alertInput && !updateParam.depth ? "input alert" : "input"
+                }
                 value={updateParam.depth}
                 onChange={(event) =>
                   setUpdateParam({
@@ -510,7 +559,7 @@ const MainPage = () => {
       <DoughnutGraph validParams={validParams} />
 
       <div className="params-lists">
-        <h3>Список параметров</h3>
+        <h3>Список метрик</h3>
         {loading ? (
           <Loading />
         ) : validParams.length ? (
@@ -518,6 +567,7 @@ const MainPage = () => {
             <ParamsItem
               name={item.name}
               collectorUrl={item.collectorUrl}
+              pattern={item.pattern}
               threshold={item.threshold}
               depth={item.depth}
               id={item.id}
@@ -525,10 +575,12 @@ const MainPage = () => {
               count={index + 1}
               sleep={sleep}
               deleteParams={deleteParams}
+              // onClickDelete={onClickDelete}
+              // deleteItem={deleteItem}
               onClickUpdate={onClickUpdate}
               redirectToAnalysis={redirectToAnalysis}
-              setOpenFloorWind={setOpenFloorWind}
-              setFloorText={setFloorText}
+              // setOpenFloorWind={setOpenFloorWind}
+              // setFloorText={setFloorText}
             ></ParamsItem>
           ))
         ) : (

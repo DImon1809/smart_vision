@@ -17,7 +17,7 @@
     cursor: default;
   }
 
-  @media (max-width: 420px) {
+  @media (max-width: 440px) {
     width: 130px;
     height: 46px;
     font-size: 13px;
@@ -31,7 +31,7 @@
       width: 21px;
       height: 4px;
 
-      @media (max-width: 420px) {
+      @media (max-width: 440px) {
         width: 19px;
         height: 3px;
       }
@@ -42,7 +42,7 @@
       height: 18px;
       transition: all 0.4s ease-in-out;
 
-      @media (max-width: 420px) {
+      @media (max-width: 440px) {
         width: 12px;
         height: 15px;
       }
@@ -83,7 +83,7 @@
   &:active .arrow-head {
     transform: translateX(6px);
 
-    @media (max-width: 420px) {
+    @media (max-width: 440px) {
       transform: translateX(4px);
     }
   }
