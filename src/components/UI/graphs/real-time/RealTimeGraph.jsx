@@ -14,6 +14,8 @@ import { Line } from "react-chartjs-2";
 import { useHTTP } from "../../../../hooks/useHTTP";
 import { useSortDate } from "../../../../hooks/useSortDate";
 
+import "./RealTimeGraph.scss";
+
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -24,8 +26,6 @@ Chart.register(
   Filler,
   Legend
 );
-
-import "./RealTimeGraph.scss";
 
 const RealTimeGraph = ({ id }) => {
   const { request } = useHTTP();
