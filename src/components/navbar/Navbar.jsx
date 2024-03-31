@@ -35,7 +35,7 @@ const Navbar = () => {
           </li>
           <li className="nav-item">
             <Link to="/" onClick={() => clickBurgerHandler(false)}>
-              Параметры
+              Метрики
             </Link>
           </li>
           <li

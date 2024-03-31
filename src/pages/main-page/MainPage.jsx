@@ -15,6 +15,9 @@ import "./MainPage.scss";
 
 import pencil from "../../font/pencil.png";
 import asterisc from "../../font/asterisc.png";
+import exclamation from "../../font/exclamation.png";
+
+const validParamsKey = "validParams";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -34,7 +37,9 @@ const MainPage = () => {
 
   const [openFloorWind, setOpenFloorWind] = useState(false);
   const [floorText, setFloorText] = useState("Внимание");
-  const [floorButton, setFloorButton] = useState(false);
+
+  const [clue, setClue] = useState(false);
+  const [clueUnactive, setClueUnactive] = useState(false);
 
   const [loadingPage, setLoadingPage] = useState(false);
   const [alertInput, setAlertInput] = useState(false);
@@ -43,6 +48,8 @@ const MainPage = () => {
   const [validParams, setValidParams] = useState([]);
 
   const anchorRef = useRef();
+
+  // console.log(validParams);
 
   const httpReg =
     /(^http?:\/\/)([0-9]+).([0-9]+).([0-9]+).([0-9]+):([0-9]+).$/gi;
@@ -66,6 +73,17 @@ const MainPage = () => {
 
   const openCloseWrapperAndFloorWind = () => setOpenFloorWind(false);
 
+  const requestByStopCreateData = async (id) => {
+    try {
+      await request(
+        "get",
+        `http://212.22.94.121:8080/api/params/${id}/values/stop-test-generation`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const requestData = useCallback(async () => {
     try {
       setUpdateParam({
@@ -82,6 +100,15 @@ const MainPage = () => {
         "get",
         `http://212.22.94.121:8080/api/params`
       );
+
+      const params = response.data.map((_l) => _l.id);
+      const paramsStatusValue = {};
+
+      for (let item of params) {
+        paramsStatusValue[item] = false;
+      }
+
+      localStorage.setItem(validParamsKey, JSON.stringify(paramsStatusValue));
 
       setValidParams(response.data);
 
@@ -165,14 +192,6 @@ const MainPage = () => {
         return setOpenFloorWind(true);
       }
 
-      if (Number(updateParam.threshold) > Number(updateParam.depth)) {
-        setFloorText("Порог должен быть меньше глубины!");
-
-        setAlertInput(true);
-
-        return setOpenFloorWind(true);
-      }
-
       if (
         validParams.find((_l) => _l.name === updateParam.name) &&
         validParams.find((_l) => _l.pattern === patternRef.current.value) &&
@@ -221,14 +240,6 @@ const MainPage = () => {
         !httpsReg.test(updateParam.collectorUrl)
       ) {
         setFloorText("Url должен состоять только из домена!");
-
-        setAlertInput(true);
-
-        return setOpenFloorWind(true);
-      }
-
-      if (Number(updateParam.threshold) > Number(updateParam.depth)) {
-        setFloorText("Порог должен быть меньше глубины!");
 
         setAlertInput(true);
 
@@ -292,14 +303,14 @@ const MainPage = () => {
         }
       );
 
-      await request(
-        "post",
-        `http://212.22.94.121:8080/api/params/${responseCreate.data.id}/values`,
-        {
-          instant: new Date().toISOString(),
-          value: responseCreate.data.depth,
-        }
-      );
+      // await request(
+      //   "post",
+      //   `http://212.22.94.121:8080/api/params/${responseCreate.data.id}/values`,
+      //   {
+      //     instant: new Date().toISOString(),
+      //     value: responseCreate.data.depth,
+      //   }
+      // );
 
       return await requestData();
     } catch (err) {
@@ -341,14 +352,14 @@ const MainPage = () => {
         }
       );
 
-      await request(
-        "post",
-        `http://212.22.94.121:8080/api/params/${responseCreate.data.id}/values`,
-        {
-          instant: new Date().toISOString(),
-          value: responseCreate.data.depth,
-        }
-      );
+      // await request(
+      //   "post",
+      //   `http://212.22.94.121:8080/api/params/${responseCreate.data.id}/values`,
+      //   {
+      //     instant: new Date().toISOString(),
+      //     value: responseCreate.data.depth,
+      //   }
+      // );
 
       return await requestData();
     } catch (err) {
@@ -401,7 +412,25 @@ const MainPage = () => {
   }, [updateParam]);
 
   useEffect(() => {
+    if (clue) {
+      setTimeout(() => {
+        setClueUnactive(true);
+      }, 2000);
+
+      setTimeout(() => {
+        setClue(false);
+        setClueUnactive(false);
+      }, 3000);
+    }
+  }, [clue]);
+
+  useEffect(() => {
     setLoadingPage(true);
+
+    // localStorage.removeItem(graphKeyX);
+    // localStorage.removeItem(graphKeyY);
+    // localStorage.removeItem(graphKeyMin);
+    // localStorage.removeItem(graphKeyMax);
   }, []);
 
   useEffect(() => {
@@ -420,9 +449,9 @@ const MainPage = () => {
         <FloorWindow
           setOpenFloorWind={setOpenFloorWind}
           floorText={floorText}
-          floorButton={floorButton}
         />
       )}
+      {/* {clue && <Clue />} */}
       <div ref={anchorRef} style={{ position: "absolute", top: 0 }}></div>
       <div className={loadingPage ? "fuctional-card load" : "fuctional-card"}>
         <div id="anchor"></div>
@@ -466,7 +495,7 @@ const MainPage = () => {
                 onChange={(event) =>
                   setUpdateParam({
                     ...updateParam,
-                    collectorUrl: event.target.value,
+                    collectorUrl: event.target.value.toLowerCase(),
                   })
                 }
               />
@@ -477,9 +506,10 @@ const MainPage = () => {
               {alertInput && !updateParam.threshold && (
                 <img src={asterisc} alt="#" className="asterisc" />
               )}
+
               <input
                 type="text"
-                placeholder="Граница ошибок..."
+                placeholder="Допустимо ошибок..."
                 className={
                   alertInput && !updateParam.threshold ? "input alert" : "input"
                 }
@@ -494,10 +524,24 @@ const MainPage = () => {
             </div>
 
             <div className={alertInput ? "params-input alert" : "params-input"}>
+              {clue && (
+                <p className={clueUnactive ? "clue unactive" : "clue"}>
+                  Максимум обрабатываемых ошибок за интервал времени
+                </p>
+              )}
+
               <img src={pencil} alt="#" className="pencil" />
               {alertInput && !updateParam.depth && (
                 <img src={asterisc} alt="#" className="asterisc" />
               )}
+
+              <img
+                src={exclamation}
+                alt="#"
+                className="exclamation"
+                onClick={() => setClue(!clue)}
+              />
+
               <input
                 type="text"
                 placeholder="Максимум ошибок..."
@@ -575,12 +619,8 @@ const MainPage = () => {
               count={index + 1}
               sleep={sleep}
               deleteParams={deleteParams}
-              // onClickDelete={onClickDelete}
-              // deleteItem={deleteItem}
               onClickUpdate={onClickUpdate}
               redirectToAnalysis={redirectToAnalysis}
-              // setOpenFloorWind={setOpenFloorWind}
-              // setFloorText={setFloorText}
             ></ParamsItem>
           ))
         ) : (

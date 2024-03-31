@@ -1,12 +1,12 @@
 export const useSortDate = () => {
-  const getCleanerDate = (_date) => {
+  const getCleanerDate = (_date, width) => {
     let mounth = _date[0].split(".");
     let time = _date[1].split(":");
 
     mounth = [mounth[0], mounth[1]].join(".");
     time = [time[0], time[1]].join(":");
 
-    return [mounth, time].join(" ");
+    return width < 434 ? time : [mounth, time].join(" ");
   };
 
   const getMinutsAndSeconds = (time) => {
@@ -15,7 +15,7 @@ export const useSortDate = () => {
     return [time[1], time[2]].join(":");
   };
 
-  const sortDate = (_errorsX) => {
+  const sortDate = (_errorsX, width) => {
     let _arrDates = _errorsX
       .map((first) => first.split(","))
       .sort((left, right) => new Date(left[0]) - new Date(right[0]));
@@ -26,7 +26,11 @@ export const useSortDate = () => {
       let left = new Date(_arrDates[i][0]).toLocaleString().split(", ");
       let right = new Date(_arrDates[i][1]).toLocaleString().split(", ");
 
-      resultArrDates.push([getCleanerDate(left), "\t", getCleanerDate(right)]);
+      resultArrDates.push([
+        getCleanerDate(left, width),
+        "\t",
+        getCleanerDate(right, width),
+      ]);
     }
 
     return resultArrDates;

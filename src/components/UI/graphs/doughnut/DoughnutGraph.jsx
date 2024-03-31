@@ -32,7 +32,6 @@ const DoughnutGraph = ({ validParams }) => {
 
   const [loadingDoughnut, setLoadingDoughnut] = useState(true);
   const [data, setData] = useState([]);
-  const [params, setParams] = useState([]);
   const [values, setValues] = useState([]);
 
   const doughnutGraphData = {
@@ -82,7 +81,6 @@ const DoughnutGraph = ({ validParams }) => {
         _values.push(response.data[item]);
       }
 
-      setParams(validParams.map((_l) => _l.name));
       setValues(_values);
 
       setData(_values);
@@ -111,42 +109,77 @@ const DoughnutGraph = ({ validParams }) => {
             <Doughnut data={doughnutGraphData} options={options}></Doughnut>
           </div>
           <div className="doughnut-infomation">
-            {params?.[0] ? (
+            {validParams?.[0] ? (
               <div className="item-wrapper">
                 <div className="teal"></div>
-                <p>{params[0] + " с " + values[0] + " ошибками"}</p>
+                <p>
+                  {validParams[0].name +
+                    " " +
+                    validParams[0].pattern +
+                    " с " +
+                    values[0] +
+                    " ошибками"}
+                </p>
               </div>
             ) : (
               ""
             )}
-            {params?.[1] ? (
+            {validParams?.[1] ? (
               <div className="item-wrapper">
                 <div className="chocolate"></div>
-                <p>{params[1] + " с " + values[1] + " ошибками"}</p>
+                <p>
+                  {validParams[1].name +
+                    " " +
+                    validParams[1].pattern +
+                    " с " +
+                    values[1] +
+                    " ошибками"}
+                </p>
               </div>
             ) : (
               ""
             )}
-            {params?.[2] ? (
+            {validParams?.[2] ? (
               <div className="item-wrapper">
                 <div className="sandy-brown"></div>
-                <p>{params[2] + " с " + values[2] + " ошибками"}</p>
+                <p>
+                  {validParams[2].name +
+                    " " +
+                    validParams[2].pattern +
+                    " с " +
+                    values[2] +
+                    " ошибками"}
+                </p>
               </div>
             ) : (
               ""
             )}
-            {params?.[3] ? (
+            {validParams?.[3] ? (
               <div className="item-wrapper">
                 <div className="cornflower-blue"></div>
-                <p>{params[3] + " с " + values[3] + " ошибками"}</p>
+                <p>
+                  {validParams[3].name +
+                    " " +
+                    validParams[3].pattern +
+                    " с " +
+                    values[3] +
+                    " ошибками"}
+                </p>
               </div>
             ) : (
               ""
             )}
-            {params?.[4] ? (
+            {validParams?.[4] ? (
               <div className="item-wrapper">
                 <div className="steel-blue"></div>
-                <p>{params[4] + " с " + values[4] + " ошибками"}</p>
+                <p>
+                  {validParams[4].name +
+                    " " +
+                    validParams[4].pattern +
+                    " с " +
+                    values[4] +
+                    " ошибками"}
+                </p>
               </div>
             ) : (
               ""

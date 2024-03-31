@@ -8,6 +8,7 @@
   background-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0px 1px 1px black;
   border-radius: 20px;
+  position: relative;
 
   @media (max-width: 1100px) {
     width: 80%;
@@ -42,5 +43,74 @@
     @media (max-width: 460px) {
       width: 100%;
     }
+  }
+
+  .refresh {
+    width: 32px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+
+    @media (max-width: 800px) {
+      width: 28px;
+      top: 19px;
+      right: 19px;
+    }
+
+    @media (max-width: 660px) {
+      width: 26px;
+      top: 18px;
+      right: 18px;
+    }
+
+    @media (max-width: 600px) {
+      cursor: default;
+    }
+
+    @media (max-width: 520px) {
+      width: 24px;
+      top: 17px;
+      right: 17px;
+    }
+
+    @media (max-width: 440px) {
+      width: 22px;
+      top: 16px;
+      right: 16px;
+    }
+
+    @media (max-width: 400px) {
+      width: 20px;
+      top: 15px;
+      right: 15px;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
+
+    &.active {
+      opacity: 1;
+      animation: rotate-refresh 4s linear infinite;
+    }
+  }
+}
+
+@keyframes rotate-refresh {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

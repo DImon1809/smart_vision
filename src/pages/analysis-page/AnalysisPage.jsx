@@ -52,7 +52,13 @@ const AnalysisPage = () => {
 
       const _titles = responseTitles.data.filter((_l) => _l.id === Number(id));
 
-      setTitles([_titles[0].name, _titles[0].collectorUrl]);
+      setTitles([
+        _titles[0].name,
+        _titles[0].collectorUrl,
+        _titles[0].pattern,
+        _titles[0].threshold,
+        _titles[0].depth,
+      ]);
 
       setForHistRequest({ ...forHistRequest, instant: from, to });
     } catch (err) {
@@ -99,7 +105,7 @@ const AnalysisPage = () => {
       <div className="analysis-infomation-wrapper">
         <div className="analysis-infomation">
           <h2 className="analysis-title">{titles[0]}</h2>
-          <h2 className="analysis-value">{titles.at(-1)}</h2>
+          <h2 className="analysis-value">{titles[1]}</h2>
         </div>
         <div className="analysis-date">
           <div className="analysis-date-before">
@@ -158,10 +164,16 @@ const AnalysisPage = () => {
       <div className="analysis-result">
         <h2>Результаты</h2>
 
-        <RealTimeGraph id={id} />
+        <RealTimeGraph
+          pattern={titles[2]}
+          threshold={titles[3]}
+          depth={titles.at(-1)}
+          id={id}
+        />
 
         <div id="anchor"></div>
         <HistGraph
+          pattern={titles[2]}
           forHistRequest={forHistRequest}
           setDateAndTimes={setDateAndTimes}
           setOpenFloorWind={setOpenFloorWind}

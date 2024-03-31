@@ -11,6 +11,8 @@ import arrowHead from "../../font/arrow-head.png";
 import close from "../../font/close.png";
 import update from "../../font/update.png";
 
+const validParamsKey = "validParams";
+
 const ParamsItem = ({
   name,
   collectorUrl,
@@ -82,7 +84,15 @@ const ParamsItem = ({
   }, [confirmDelete]);
 
   useEffect(() => {
-    if (!paramStatus) {
+    let status = JSON.parse(localStorage.getItem(validParamsKey));
+
+    if (status[id] === paramStatus) return;
+
+    if (paramStatus && paramStatus !== "PEN") {
+      status[id] = paramStatus;
+
+      localStorage.setItem(validParamsKey, JSON.stringify(status));
+
       setFloorText(`У "${name}" превышен порог ошибок!`);
       setOpenFloorWind(true);
     }
@@ -130,11 +140,11 @@ const ParamsItem = ({
             paramStatus
               ? paramStatus === "PEN"
                 ? "circle-param-item"
-                : "circle-param-item ok"
-              : "circle-param-item err"
+                : "circle-param-item err"
+              : "circle-param-item ok"
           }
         >
-          {paramStatus ? (paramStatus === "PEN" ? "PEN" : "OK") : "ERR"}
+          {paramStatus ? (paramStatus === "PEN" ? "PEN" : "ERR") : "OK"}
         </div>
       </div>
 
@@ -143,8 +153,8 @@ const ParamsItem = ({
           paramStatus
             ? paramStatus === "PEN"
               ? "param-item-button"
-              : "param-item-button ok"
-            : "param-item-button err"
+              : "param-item-button err"
+            : "param-item-button ok"
         }
         onClick={() => redirectToAnalysis(id, paramStatus)}
       >
